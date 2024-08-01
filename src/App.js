@@ -7,8 +7,33 @@ import anime from 'animejs';
 function App() {
     const buttonRef = useRef();
 
+    var animation = anime({
+        targets: '#id_move_left_nav p',
+        translateX: [100, 0],
+        duration: 1200,
+        opacity: [0, 1],
+        autoplay: false,
+        delay: (el, i) => {
+            return 300 + 100 * i;
+        },
+    })
+
     return (
         <div className="App">
+            <button onClick={() => {
+                console.log(animation.completed)
+            }}>Check Completed</button>
+
+            <button onClick={() => {
+                console.log(anime.running)
+                if(anime.running.length > 0) {
+                    console.log(anime.running[0])
+                    if(animation.completed) {
+
+                    }
+                }
+            }}>Log Running Anime</button>
+
             <button ref={buttonRef} onClick={() => {
                 anime({
                     targets: buttonRef.current,
@@ -20,15 +45,18 @@ function App() {
 
             <div style={{border:'solid black 1px'}}>
                 <button onClick={() => {
-                    anime({
+                    console.log('here')
+                    animation = anime({
                         targets: '#id_move_left_nav p',
                         translateX: [100, 0],
                         duration: 1200,
                         opacity: [0, 1],
+                        autoplay: false,
                         delay: (el, i) => {
                             return 300 + 100 * i;
                         },
                     })
+                    animation.play();
                 }}>리스트 차례로 오른쪽에서 등장</button>
 
                 <nav id='id_move_left_nav'>
@@ -67,6 +95,30 @@ function App() {
                         opacity: [0, 1],
                     })
                 }}>작아지면서 등장</button>
+            </div>
+
+            <div style={{ border: 'solid black 1px' }}>
+                <button id="id_large_button" onClick={() => {
+                    anime({
+                        targets: '#id_input',
+                        value: [0, 1000],
+                        round: 1,
+                        easing: 'easeInOutExpo'
+                    });
+                }}>Input 숫자 증가</button>
+                <input id="id_input"></input>
+            </div>
+
+            <div style={{ border: 'solid black 1px' }}>
+                <button id="id_large_button" onClick={() => {
+                    anime({
+                        targets: '#id_number',
+                        innerHTML: [0, 10],
+                        round: 1,
+                        easing: 'linear'
+                    });
+                }}>Div 숫자 증가</button>
+                <div id="id_number"></div>
             </div>
 
 
@@ -238,47 +290,66 @@ function App() {
                 {/* 텍스트 애니메이션 5 */}
                 <div style={{ border: 'solid black 1px' }}>
                     <button onClick={() => {
-                        anime.timeline({ loop: true })
-                            .add({
+
+                        anime.timeline({ loop: false })
+                            .add({// 라인 그리기
                                 targets: '.ml5 .line',
                                 opacity: [0.5, 1],
                                 scaleX: [0, 1],
                                 easing: "easeInOutExpo",
-                                duration: 700
-                            }).add({
+                                duration: 700,
+                            }).add({// 라인 확장
                                 targets: '.ml5 .line',
                                 duration: 600,
                                 easing: "easeOutExpo",
-                                translateY: (el, i) => (-0.625 + 0.625 * 2 * i) + "em"
-                            }).add({
+                                translateY: (el, i) => {
+                                    return (-0.625 + 0.625 * 2 * i) + "em"
+                                }
+                            })
+
+                            anime.timeline({ loop: false })
+                            .add({// & 등장
                                 targets: '.ml5 .ampersand',
                                 opacity: [0, 1],
                                 scaleY: [0.5, 1],
                                 easing: "easeOutExpo",
+                                delay: 700,
                                 duration: 600,
                                 offset: '-=600'
-                            }).add({
+                            })
+
+                            anime.timeline({ loop: false })
+                            .add({// 왼쪽 텍스트 등장
                                 targets: '.ml5 .letters-left',
                                 opacity: [0, 1],
                                 translateX: ["0.5em", 0],
                                 easing: "easeOutExpo",
+                                delay: 1300,
                                 duration: 600,
                                 offset: '-=300'
-                            }).add({
+                            })
+
+                            anime.timeline({ loop: false })
+                            .add({// 오른쪽 텍스트 등장
                                 targets: '.ml5 .letters-right',
                                 opacity: [0, 1],
                                 translateX: ["-0.5em", 0],
                                 easing: "easeOutExpo",
+                                delay: 1300,
                                 duration: 600,
                                 offset: '-=600'
-                            }).add({
-                                targets: '.ml5',
-                                opacity: 0,
-                                duration: 1000,
-                                easing: "easeOutExpo",
-                                delay: 1000
-                            });
-                    }}>텍스트 애니메이션 5</button>
+                            })
+
+                            // anime.timeline({ loop: true })
+                            // .add({
+                            //     targets: '.ml5',
+                            //     opacity: 0,
+                            //     duration: 1000,
+                            //     easing: "easeOutExpo",
+                            //     delay: 6000
+                            // });
+
+                    }}>텍스트 애니메이션 5 속도 해결 필요</button>
                     <h1 className="ml5">
                         <span className="text-wrapper">
                             <span className="line line1"></span>
